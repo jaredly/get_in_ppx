@@ -1,8 +1,10 @@
 {
-  "name": "let-anything",
+  "name": "@jaredly/get_in",
   "version": "1.0.0",
   "scripts": {
-    "start": "bsb -make-world -backend native -w",
+    "start": "bsb -make-world -backend native",
+    "js": "bsb -make-world -backend js",
+    "check": "zsh -c './lib/bs/native/get_in.native <(yarn -s bsrefmt --print binary --parse re < tests/Tests.re) >(yarn -s bsrefmt --parse binary)'",
     "postinstall": "bsb -make-world -backend native",
     "clean": "bsb -clean-world",
     "test": "./lib/bs/native/tests.native",
@@ -13,10 +15,10 @@
     "Async"
   ],
   "repository": {
-    "url": "jaredly/let-anything",
+    "url": "jaredly/get_in",
     "type": "git"
   },
-  "description": "let%Anything ppx for async/options/results/etc.",
+  "description": "get_in ppx for option chaining in reason",
   "author": "Jared Forsyth",
   "license": "ISC",
   "dependencies": {
