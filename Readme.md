@@ -4,12 +4,12 @@ An exploration of the ["safe call operators" pull-request](https://github.com/fa
 
 ## Installation
 
-`npm i jaredly/get_in`
+`npm i get_in_ppx`
 
 bsconfig.json
 
 ```
-"ppx-flags": ["get_in/ppx"]
+"ppx-flags": ["get_in_ppx/ppx"]
 ```
 
 ## Operators

@@ -1,5 +1,5 @@
 {
-  "name": "@jaredly/get_in",
+  "name": "get_in_ppx",
   "version": "0.0.0-dont-publish",
   "private": true,
   "scripts": {

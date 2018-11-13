@@ -1,0 +1,22 @@
+{
+  "name": "get_in_ppx",
+  "version": "1.0.2",
+  "scripts": {
+    "postinstall": "bsb -make-world -backend native; cp lib/bs/native/get_in.native ./ppx",
+    "clean": "bsb -clean-world"
+  },
+  "keywords": [
+    "Reason",
+    "Graphql"
+  ],
+  "repository": {
+    "url": "jaredly/get_in_ppx",
+    "type": "git"
+  },
+  "description": "get_in ppx for option chaining in reason",
+  "author": "Jared Forsyth",
+  "license": "ISC",
+  "dependencies": {
+    "bs-platform": "bsansouci/bsb-native#3.2.0"
+  }
+}
