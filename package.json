@@ -1,6 +1,7 @@
 {
-  "name": "get_in",
-  "version": "1.0.0",
+  "name": "@jaredly/get_in",
+  "version": "0.0.0-dont-publish",
+  "private": true,
   "scripts": {
     "start": "bsb -make-world -backend native",
     "js": "bsb -make-world -backend js",
