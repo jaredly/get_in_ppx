@@ -1,0 +1,115 @@
+name: get_in_ppx pipeline
+
+on:
+  push:
+    paths:
+      - 'package.json'
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [12.x]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: setup
+        run: |
+          npm install -g esy@latest cross-env
+      # OCaml 4.06 and BuckleScript 6
+      - name: install-build
+        run: |
+          esy install
+          esy b
+      - name: Upload artifacts ${{ matrix.os }}
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}-bsb6
+          path: _build/default/src/bin.exe
+      # OCaml 4.02 and BuckleScript 5
+      - name: install-build @402
+        run: |
+          esy @402 install
+          esy @402 b
+      - name: Upload artifacts ${{ matrix.os }}
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}
+          path: _build/default/src/bin.exe
+        env:
+          CI: true
+
+  publish:
+    needs: build
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Download linux artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: ubuntu-latest
+          path: binaries/linux
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-latest
+          path: binaries/darwin
+
+      - name: Download windows artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: windows-latest
+          path: binaries/windows
+
+      - name: Move artifacts
+        run: |
+          mkdir -p bin/bsb6
+          mv binaries/darwin/bin.exe bin/get_in_ppx-darwin-x64.exe
+          mv binaries/windows/bin.exe bin/get_in_ppx-win-x64.exe
+          mv binaries/linux/bin.exe bin/get_in_ppx-linux-x64.exe
+          rm -rf binaries
+
+      - name: Download bsb6 linux artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: ubuntu-latest-bsb6
+          path: binaries/linux
+
+      - name: Download bsb6 macOS artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: macOS-latest-bsb6
+          path: binaries/darwin
+
+      - name: Download bsb6 windows artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: windows-latest-bsb6
+          path: binaries/windows
+
+      - name: Move artifacts
+        run: |
+          mv binaries/darwin/bin.exe bin/bsb6/get_in_ppx-darwin-x64.exe
+          mv binaries/windows/bin.exe bin/bsb6/get_in_ppx-win-x64.exe
+          mv binaries/linux/bin.exe bin/bsb6/get_in_ppx-linux-x64.exe
+
+      - name: Publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - run: |
+          yarn publish --tag test
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

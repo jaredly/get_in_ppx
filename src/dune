@@ -1,0 +1,7 @@
+(executable
+ (name bin)
+ (public_name get_in_ppx)
+ (libraries reason
+            ocaml-migrate-parsetree)
+ (ocamlopt_flags ( -linkall ))
+ (preprocess (pps ppx_tools_versioned.metaquot_402)))

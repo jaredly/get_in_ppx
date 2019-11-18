@@ -1,0 +1,16 @@
+./_build
+./_esy
+./.vscode
+./node_modules
+./ppx
+./get_in_ppx.*
+./.ci
+./src
+./tests
+./esy.lock
+./402.esy.lock
+./binaries
+./esy.json
+./402.json
+./dune-project
+./dev_tests

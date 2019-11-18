@@ -7,17 +7,12 @@
     "error": "+8"
   },
   "sources": [
-    {"dir": "src", "type": "ppx"},
-    {"dir": "tests", "type": "dev", "subdirs": true, "ppx": ["Get_in"], "backend": "js"}
+    {"dir": "src"}
   ],
   "ocaml-dependencies": ["compiler-libs", "unix", "bigarray", "str"],
   "public": ["Main"],
   "entries": [{
-    "backend": "js",
-    "main-module": "Tests"
-  }, {
     "backend": "native",
-    "type": "ppx",
     "main-module": "Get_in"
   }],
   "refmt": 3
