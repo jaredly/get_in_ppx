@@ -1,6 +1,6 @@
 {
 	"name": "@jsiebern/get_in_ppx",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"scripts": {
 		"postinstall": "node ./copyPlatformBinaryInPlace.js"
 	},
@@ -12,5 +12,8 @@
 	"description": "get_in ppx for option chaining in reason",
 	"author": "Jared Forsyth",
 	"license": "ISC",
-	"dependencies": {}
+	"dependencies": {},
+	"publishConfig": {
+		"access": "public"
+	}
 }

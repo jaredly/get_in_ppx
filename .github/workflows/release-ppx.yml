@@ -110,6 +110,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - run: |
-          yarn publish --tag test
+          yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
