@@ -3,7 +3,7 @@ name: get_in_ppx pipeline
 on:
   push:
     paths:
-      - 'package.json'
+      - 'package-disabled.json'
 
 jobs:
   build:

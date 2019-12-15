@@ -1,5 +1,5 @@
 {
-	"name": "@jsiebern/get_in_ppx",
+	"name": "get_in_ppx",
 	"version": "1.0.4",
 	"scripts": {
 		"postinstall": "node ./copyPlatformBinaryInPlace.js"

@@ -1,5 +1,4 @@
-(executable
- (name bin)
+(library
  (public_name get_in_ppx)
  (libraries reason
             ocaml-migrate-parsetree)

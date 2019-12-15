@@ -1,4 +1,7 @@
 {
+	"scripts": {
+		"cp-bin": "cp '#{self.target_dir}/install/default/bin/ppx' ./"
+	},
 	"dependencies": {
 		"@opam/dune": "*",
 		"@opam/result": "*",
@@ -12,10 +15,9 @@
 		"ocaml": "~4.6.0"
 	},
 	"peerDependencies": {
-		"ocaml": ">= 4.6.0"
+		"ocaml": ">= 4.2.0"
 	},
 	"esy": {
-		"build": "refmterr dune build -p get_in_ppx",
-		"buildsInSource": "_build"
+		"build": "dune build -p #{self.name}"
 	}
 }

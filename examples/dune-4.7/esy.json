@@ -1,0 +1,14 @@
+{
+    "name": "dune-example",
+    "dependencies": {
+        "ocaml": "~4.7",
+        "@opam/dune": "*",
+        "@esy-ocaml/reason": "*"
+    },
+    "esy": {
+        "build": "dune build -p #{self.name}"
+    },
+    "scripts": {
+        "test": "dune exec -p #{self.name} bin"
+    }
+}
