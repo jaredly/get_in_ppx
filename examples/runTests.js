@@ -14,6 +14,10 @@ const checkRun = (cmd, args, dir) => {
         throw new Error(`${cmd} ${args.join(' ')}`)
     }
 }
+const root = path.join(__dirname, '..')
+checkRun('esy', [], root)
+checkRun('esy', ['cp-bin'], root)
+
 
 const results = examples.map(dir => {
     console.log(`>> [[${path.basename(dir)}]]`);
