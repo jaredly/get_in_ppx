@@ -34,13 +34,13 @@ const results = examples.map(dir => {
     return {succeeded: true}
 });
 
-const succeeds = results.map(result => result.succeeded);
-const failures = succeeds.reduce((count, success) => success ? count : count + 1, 0);
+const failed = results.filter(result => !result.succeeded);
 
-if (failures.length) {
-    console.log(`${failures.length}/${results.length} failed`)
+// console.log(results)
+if (failed.length) {
+    console.log(`ERROR: ${failed.length}/${results.length} failed`)
 } else {
     console.log('All clear!')
 }
 
-process.exit(failures.length > 0 ? 1 : 0)
+process.exit(failed.length > 0 ? 1 : 0)
