@@ -25,6 +25,7 @@ const results = examples.map(dir => {
             checkRun('esy', ['test'], dir);
         } else {
             checkRun('npm', ['-s', 'i'], dir);
+            checkRun('npm', ['-s', 'run', 'clean'], dir);
             checkRun('npm', ['-s', 'run', 'build'], dir);
             checkRun('npm', ['-s', 'test'], dir);
         }

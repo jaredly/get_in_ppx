@@ -324,7 +324,7 @@ let get_mapper =
       },
   };
 
-let mapper = (_argv, _) =>
+let mapper = 
   Parsetree.{
     ...Ast_mapper.default_mapper,
     expr: (mapper, expr) =>
