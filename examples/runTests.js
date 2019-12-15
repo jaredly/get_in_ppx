@@ -18,13 +18,15 @@ const checkRun = (cmd, args, dir) => {
 const results = examples.map(dir => {
     console.log(`>> [[${path.basename(dir)}]]`);
     try {
+        // For this particular ppx, we're unlikely to have dune-based projects in the near future :)
+        // But I'm including this for the benefit of future ppxs that I might use the same setup for.
         if (fs.existsSync(path.join(dir, 'esy.json'))) {
             checkRun('esy', [], dir);
             checkRun('esy', ['test'], dir);
         } else {
-            checkRun('npm', ['i'], dir);
-            checkRun('npm', ['run', 'build'], dir);
-            checkRun('npm', ['test'], dir);
+            checkRun('npm', ['-s', 'i'], dir);
+            checkRun('npm', ['-s', 'run', 'build'], dir);
+            checkRun('npm', ['-s', 'test'], dir);
         }
     } catch (error) {
         return {succeeded: false, reason: error.message}
