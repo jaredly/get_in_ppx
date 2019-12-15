@@ -25,3 +25,5 @@ jobs:
           npm install -g esy@latest cross-env
       - name: build
         run: esy
+      - name: examples tests
+          run: node examples/runTests.js
