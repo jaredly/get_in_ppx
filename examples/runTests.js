@@ -11,7 +11,9 @@ const examples = fs
 const checkRun = (cmd, args, dir) => {
     const res = spawnSync(cmd, args, {cwd: dir, stdio: 'inherit'});
     if (res.status !== 0) {
-        throw new Error(`${cmd} ${args.join(' ')}`)
+        console.log(res.stdout)
+        console.log(res.stderr)
+        throw new Error(`${cmd} ${args.join(' ')} - exited with status ${res.status}`)
     }
 }
 const root = path.join(__dirname, '..')
