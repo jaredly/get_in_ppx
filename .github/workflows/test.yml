@@ -23,12 +23,12 @@ jobs:
       - name: setup
         run: |
           npm install -g esy@latest cross-env
-      - uses: actions/cache@v1
-        with:
-          path: ~/.esy
-          key: ${{ runner.os }}-node-${{ hashFiles('esy.lock/**') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      # - uses: actions/cache@v1
+      #   with:
+      #     path: ~/.esy
+      #     key: ${{ runner.os }}-node-${{ hashFiles('esy.lock/**') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-node-
       - name: build
         run: esy
       - name: examples tests
