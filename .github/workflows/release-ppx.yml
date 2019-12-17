@@ -51,6 +51,15 @@ jobs:
         run: esy cp-bin
       - name: examples tests
         run: node examples/runTests.js
+      - name: fix windows weirdness
+        uses: actions/github-script@master
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const fs = require('fs')
+            if (fs.existsSync('ppx.exe')) {
+              fs.renameSync('ppx.exe', 'ppx')
+            }
 
       - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
