@@ -1,0 +1,23 @@
+{
+	"scripts": {
+		"cp-bin": "cp '#{self.target_dir}/install/default/bin/ppx' ./"
+	},
+	"dependencies": {
+		"@opam/dune": "*",
+		"@opam/result": "*",
+		"@opam/yojson": "*",
+		"@opam/ocaml-migrate-parsetree": "*",
+		"@opam/ppx_tools_versioned": "*",
+		"@esy-ocaml/reason": "3.5.0",
+		"refmterr": "*"
+	},
+	"devDependencies": {
+		"ocaml": "~4.8.0"
+	},
+	"peerDependencies": {
+		"ocaml": ">= 4.2.0"
+	},
+	"esy": {
+		"build": "dune build -p #{self.name}"
+	}
+}

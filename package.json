@@ -1,28 +1,19 @@
 {
-  "name": "get_in_ppx",
-  "version": "0.0.0-dont-publish",
-  "private": true,
-  "scripts": {
-    "start": "bsb -make-world -backend native",
-    "js": "bsb -make-world -backend js",
-    "check": "zsh -c './lib/bs/native/get_in.native <(yarn -s bsrefmt --print binary --parse re < tests/Tests.re) >(yarn -s bsrefmt --parse binary)'",
-    "postinstall": "bsb -make-world -backend native; cp lib/bs/native/get_in.native ./ppx",
-    "clean": "bsb -clean-world",
-    "test": "./lib/bs/native/tests.native",
-    "watch": "bsb -make-world -backend native -w"
-  },
-  "keywords": [
-    "Reason",
-    "Graphql"
-  ],
-  "repository": {
-    "url": "jaredly/get_in",
-    "type": "git"
-  },
-  "description": "get_in ppx for option chaining in reason",
-  "author": "Jared Forsyth",
-  "license": "ISC",
-  "dependencies": {
-    "bs-platform": "bsansouci/bsb-native#3.2.0"
-  }
+	"name": "get_in_ppx",
+	"version": "1.0.4",
+	"scripts": {
+		"postinstall": "node ./copyPlatformBinaryInPlace.js"
+	},
+	"keywords": [ "Reason", "Graphql" ],
+	"repository": {
+		"url": "jaredly/get_in_ppx",
+		"type": "git"
+	},
+	"description": "get_in ppx for option chaining in reason",
+	"author": "Jared Forsyth",
+	"license": "ISC",
+	"dependencies": {},
+	"publishConfig": {
+		"access": "public"
+	}
 }
