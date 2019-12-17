@@ -59,7 +59,7 @@ jobs:
           path: ppx
 
       - name: rm the esy build stuff, don't need to cache that
-        run: rm -rf ~/.esy/3_*/b/
+        run: rm -r ~/.esy/3_*/b/
 
   publish:
     needs: build

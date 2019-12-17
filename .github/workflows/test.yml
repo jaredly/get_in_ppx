@@ -33,4 +33,4 @@ jobs:
       - name: examples tests
         run: node examples/runTests.js
       - name: rm the esy build stuff, don't need to cache that
-        run: rm -rf ~/.esy/3_*/b/
+        run: rm -r ~/.esy/3_*/b/
