@@ -1,13 +1,29 @@
-name: get_in_ppx pipeline
+name: npm release
 
 on:
-  issues:
-    types: [opened, reopened]
+  push:
+    branches:
+      - master
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      # Check the issue
+      - working-directory: .github/actions
+        id: check
+        run: node check.js
+
   build:
     name: Build ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    needs: check
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
@@ -18,15 +34,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-
-      # Check the issue
-      - working-directory: .github/actions
-        run: npm i
-      - working-directory: .github/actions
-        id: check
-        run: node check.js
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: setup
         run: npm i -g esy@latest
@@ -40,7 +47,7 @@ jobs:
 
       - name: build
         run: esy
-      - name: build
+      - name: cp-bin
         run: esy cp-bin
       - name: examples tests
         run: node examples/runTests.js
@@ -64,15 +71,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-
-      # Check the issue
-      - working-directory: .github/actions
-        run: npm i
-      - working-directory: .github/actions
-        id: check
-        run: node check.js --no-comment
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download linux artifacts
         uses: actions/download-artifact@master
@@ -100,27 +98,16 @@ jobs:
           mv binaries/linux/ppx dist/get_in_ppx-linux-x64.exe
           rm -rf binaries
 
-      - name: Bump the npm version
-        run: |
-          npm version ${{ steps.check.outputs.version }}
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -am 'version ${{ steps.check.outputs.version }}'
-
       # Test out the package
       - name: pack it up & test it out
         run: |
+          rm -rf get_in_ppx-*.tgz
           npm pack
           cd dist_examples/bsb-7
           npm i
-          npm i ../../get_in_ppx-${{ steps.check.outputs.version }}.tgz
+          npm i ../../get_in_ppx-*.tgz
           npm run build
 
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
-      - name: Push the version bump up
-        run: git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
