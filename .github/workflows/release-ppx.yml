@@ -80,6 +80,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Download linux artifacts
         uses: actions/download-artifact@master
@@ -117,7 +118,7 @@ jobs:
           npm i ../../get_in_ppx-*.tgz
           npm run build
 
-      - run: npm publish
+      - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
