@@ -15,21 +15,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - name: Use Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
           node-version: 12
-      # esy
       - name: setup
-        run: |
-          npm install -g esy@latest cross-env
-      # - uses: actions/cache@v1
-      #   with:
-      #     path: ~/.esy
-      #     key: ${{ runner.os }}-node-${{ hashFiles('esy.lock/**') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-node-
+        run: npm i -g esy@latest
+
+      - uses: actions/cache@v1
+        with:
+          path: ~/.esy
+          key: ${{ runner.os }}-node-${{ hashFiles('esy.lock/**') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: build
         run: esy
       - name: examples tests
         run: node examples/runTests.js
+      - name: rm the esy build stuff, don't need to cache that
+        run: rm -rf ~/.esy/3_*/b/

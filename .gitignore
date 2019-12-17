@@ -1,5 +1,7 @@
 lib
-/ppx
+dist
+ppx
+ppx.exe
 .bsb.lock
 _esy
 .merlin
@@ -12,3 +14,4 @@ _release
 .graphql_ppx_cache
 graphql_ppx.exe
 yarn-error.log
+*.tgz

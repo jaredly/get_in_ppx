@@ -1,9 +1,8 @@
 name: get_in_ppx pipeline
 
 on:
-  push:
-    paths:
-      - 'package-disabled.json'
+  issues:
+    types: [opened]
 
 jobs:
   build:
@@ -11,40 +10,47 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [12.x]
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
       - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 12
+
+      # Check the issue
+      - working-directory: .github/actions
+        run: npm i
+      - working-directory: .github/actions
+        id: check
+        run: node check.js
+
       - name: setup
-        run: |
-          npm install -g esy@latest cross-env
-      # OCaml 4.06 and BuckleScript 6
-      - name: install-build
-        run: |
-          esy install
-          esy b
-      - name: Upload artifacts ${{ matrix.os }}
-        uses: actions/upload-artifact@master
+        run: npm i -g esy@latest
+
+      - uses: actions/cache@v1
         with:
-          name: ${{ matrix.os }}-bsb6
-          path: _build/default/src/bin.exe
-      # OCaml 4.02 and BuckleScript 5
-      - name: install-build @402
-        run: |
-          esy @402 install
-          esy @402 b
+          path: ~/.esy
+          key: ${{ runner.os }}-node-${{ hashFiles('esy.lock/**') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: build
+        run: esy
+      - name: build
+        run: esy cp-bin
+      - name: examples tests
+        run: node examples/runTests.js
+
       - name: Upload artifacts ${{ matrix.os }}
         uses: actions/upload-artifact@master
         with:
           name: ${{ matrix.os }}
-          path: _build/default/src/bin.exe
-        env:
-          CI: true
+          path: ppx
+
+      - name: rm the esy build stuff, don't need to cache that
+        run: rm -rf ~/.esy/3_*/b/
 
   publish:
     needs: build
@@ -52,6 +58,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      # Check the issue
+      - working-directory: .github/actions
+        run: npm i
+      - working-directory: .github/actions
+        id: check
+        run: node check.js --no-comment
 
       - name: Download linux artifacts
         uses: actions/download-artifact@master
@@ -73,43 +90,33 @@ jobs:
 
       - name: Move artifacts
         run: |
-          mkdir -p bin/bsb6
-          mv binaries/darwin/bin.exe bin/get_in_ppx-darwin-x64.exe
-          mv binaries/windows/bin.exe bin/get_in_ppx-win-x64.exe
-          mv binaries/linux/bin.exe bin/get_in_ppx-linux-x64.exe
+          mkdir -p dist
+          mv binaries/darwin/ppx dist/get_in_ppx-darwin-x64.exe
+          mv binaries/windows/ppx dist/get_in_ppx-win-x64.exe
+          mv binaries/linux/ppx dist/get_in_ppx-linux-x64.exe
           rm -rf binaries
 
-      - name: Download bsb6 linux artifacts
-        uses: actions/download-artifact@master
-        with:
-          name: ubuntu-latest-bsb6
-          path: binaries/linux
-
-      - name: Download bsb6 macOS artifacts
-        uses: actions/download-artifact@master
-        with:
-          name: macOS-latest-bsb6
-          path: binaries/darwin
-
-      - name: Download bsb6 windows artifacts
-        uses: actions/download-artifact@master
-        with:
-          name: windows-latest-bsb6
-          path: binaries/windows
-
-      - name: Move artifacts
+      - name: Bump the npm version
         run: |
-          mv binaries/darwin/bin.exe bin/bsb6/get_in_ppx-darwin-x64.exe
-          mv binaries/windows/bin.exe bin/bsb6/get_in_ppx-win-x64.exe
-          mv binaries/linux/bin.exe bin/bsb6/get_in_ppx-linux-x64.exe
+          npm version ${{ steps.check.outputs.version }}
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am 'version ${{ steps.check.outputs.version }}'
 
-      - name: Publish
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-          registry-url: 'https://registry.npmjs.org'
+      # Test out the package
+      - name: pack it up & test it out
+        run: |
+          npm pack
+          cd dist_examples/bsb-7
+          npm i
+          npm i ../../get_in_ppx-${{ steps.check.outputs.version }}.tgz
+          npm run build
 
-      - run: |
-          yarn publish
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: Push the version bump up
+        run: git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

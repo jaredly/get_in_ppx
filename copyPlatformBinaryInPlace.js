@@ -13,13 +13,13 @@ if (platform === 'win32') {
 	platform = 'win';
 }
 
-copyBinary('bin/get_in_ppx-' + platform + '-' + arch + '.exe', 'ppx');
-copyBinary('bin/bsb6/get_in_ppx-' + platform + '-' + arch + '.exe', 'ppx6');
+copyBinary('dist/get_in_ppx-' + platform + '-' + arch + '.exe', 'ppx');
 
 function copyBinary(filename, destFilename) {
 	var supported = fs.existsSync(filename);
 
 	if (!supported) {
+		console.log(filename)
 		console.error('get_in_ppx does not support this platform :(');
 		console.error('');
 		console.error('get_in_ppx comes prepacked as built binaries to avoid large');
