@@ -9,7 +9,8 @@ const examples = fs
     .filter(name => fs.statSync(name).isDirectory());
 
 const checkRun = (cmd, args, dir) => {
-    const res = spawnSync(cmd, args, {cwd: dir, stdio: 'inherit'});
+    // We need "shell: true" for windows to work
+    const res = spawnSync(cmd, args, {shell: true, cwd: dir, stdio: 'inherit'});
     if (res.status !== 0) {
         console.log(res.stdout)
         console.log(res.stderr)
