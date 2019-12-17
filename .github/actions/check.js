@@ -7,7 +7,7 @@ const semver = require('semver');
 
 const TRIGGER = /^actions: release (major|minor|patch|premajor|preminor)$/m;
 
-const packageName = require('../../package.json').version;
+const packageName = require('../../package.json').name;
 
 const getMostRecentVersion = () => {
     const result = spawnSync('npm', ['show', packageName, 'version'], {
