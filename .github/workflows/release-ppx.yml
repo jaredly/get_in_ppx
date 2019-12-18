@@ -113,12 +113,19 @@ jobs:
         run: |
           rm -rf get_in_ppx-*.tgz
           npm pack
+          mv get_in_ppx-*.tgz get_in_ppx.tgz
           cd dist_examples/bsb-7
           npm i
-          npm i ../../get_in_ppx-*.tgz
+          npm i ../../get_in_ppx.tgz
           npm run build
 
-      - run: yarn publish
+      - name: Upload package tarball
+        uses: actions/upload-artifact@master
+        with:
+          name: package
+          path: get_in_ppx.tgz
+
+      - run: npm publish get_in_ppx.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
